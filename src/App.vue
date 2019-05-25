@@ -2,6 +2,7 @@
   <div id="app">
     <h1>TETRIS</h1>
     <ttrs />
+    <img src="@/assets/logo.png" alt="てとりす" @click="reload" class="main_logo">
   </div>
 </template>
 
@@ -12,6 +13,11 @@ export default {
   name: "app",
   components: {
     ttrs
+  },
+  methods:{
+    reload(){
+      location.reload(false)
+    }
   }
 };
 </script>
@@ -24,14 +30,11 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-  &::after{
-    content: "";
-    background: url(assets/logo.png) 0 0 no-repeat;
-    background-size: contain;
-    height: 100px; width: 100px;
-    position: fixed;
-    bottom: 0; right: 0;
-    z-index: -1;
-  }
+}
+.main_logo{
+  position: fixed;
+  bottom: 0; right: 0;
+  z-index: -1;
+  height: 100px;
 }
 </style>
