@@ -10,6 +10,7 @@
     <button @click="moveLeft">左</button>
     <button @click="fallTrough">下</button>
     <button @click="moveRight">右</button>
+    <button>回転(未実装)</button>
   </div>
 </template>
 
