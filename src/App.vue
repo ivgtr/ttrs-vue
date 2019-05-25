@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <h1>TETRIS</h1>
+    <ttrs />
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import ttrs from '@/components/ttrs.vue'
 
 export default {
   name: "app",
   components: {
-    HelloWorld
+    ttrs
   }
 };
 </script>
@@ -24,5 +24,14 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  &::after{
+    content: "";
+    background: url(assets/logo.png) 0 0 no-repeat;
+    background-size: contain;
+    height: 100px; width: 100px;
+    position: fixed;
+    bottom: 0; right: 0;
+    z-index: -1;
+  }
 }
 </style>
