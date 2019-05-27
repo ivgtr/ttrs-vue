@@ -2,17 +2,32 @@
   <div class="ttrs">
     <p>{{ state }}</p>
     <p>現在のスコア:{{ score }}</p>
+    <p>今までのハイスコア:{{ Highscore }}</p>
     <table>
       <tr v-for="hei in height" :key="hei.id">
         <td v-for="wid in width" :key="wid.id"></td>
       </tr>
     </table>
-    <button @click="start">{{click}}</button>
-    <button @click="moveLeft">左</button>
-    <button @click="moveDown">下</button>
-    <button @click="moveRight">右</button>
-    <button @click="rotate">回転(未実装)</button>
-    <button @click="fallTrough">落とす</button>
+    <div class="btn">
+      <span class="btn_bg" @click="moveLeft">
+        <i class="fas fa-angle-left"></i>
+      </span>
+      <span class="btn_bg" @click="moveDown">
+        <i class="fas fa-angle-left"></i>
+      </span>
+      <span class="btn_bg" @click="moveRight">
+        <i class="fas fa-angle-left"></i>
+      </span>
+      <span class="btn_bg" @click="rotate">
+        <i class="fas fa-undo"></i>
+      </span>
+      <span class="btn_bg" @click="fallTrough">
+        <i class="fas fa-angle-double-left"></i>
+      </span>
+      <span class="text_bg" @click="start">
+        <span>{{click}}</span>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -29,11 +44,12 @@ export default {
       intervalId: undefined,
       state: "スタートを押してね",
       ready: false,
-      click: "スタート",
+      click: "Start",
       blocks:[
         {
           class:"i",
           pattern:[
+            [0, 0, 0, 0],
             [1, 1, 1, 1]
           ]
         },
@@ -92,7 +108,13 @@ export default {
       nextFallingBlockNum: "",
       canDelete: true,
       score: 0,
+      Highscore: "未実装",
       speed: 950,
+      blockRange: 0,
+      initRow: "",
+      initCol: "",
+      blockClass: "",
+      rotatedBlockClass: "",
 
 
     }
@@ -102,7 +124,7 @@ export default {
       this.state = "てっててっててーてってててってー"
       if(this.ready == false){
         this.ready = !this.ready
-        this.click = "一時停止"
+        this.click = "Pause"
         this.intervalId = setInterval(() => {
           this.checkGameOver()
           if(this.hasFallingBlock()){
@@ -114,7 +136,8 @@ export default {
       }, this.speed)
       }else{
         this.ready = !this.ready
-        this.click = "スタート"
+        console.log(this.ready)
+        this.click = "Start"
         clearInterval(this.intervalId)
       }
     },
@@ -149,7 +172,7 @@ export default {
       for(var row = 18;row >= 0; row--){
         for(var col = 0;col < 10;col++){
           if(this.cells[row][col].base){
-            this.cells[row][col].base = true
+            this.cells[row+1][col].base = true
             this.cells[row][col].base = null
           }
           if(this.cells[row][col].blockNum === this.fallingBlockNum){
@@ -178,6 +201,7 @@ export default {
       this.nextBlock = this.blocks[this.nextBlockKey]
       this.nextFallingBlockNum = this.fallingBlockNum + 1
       this.pattern = this.nextBlock.pattern
+      this.cells[0][3].base = true
       for (var row = 0; row < this.pattern.length; row++){
         for (var col = 0; col < this.pattern[row].length; col++){
           if(this.pattern[row][col]){
@@ -218,87 +242,148 @@ export default {
       }
     },
     moveLeft(){
-      for (var row = 0; row < 20; row++) {
-        if (this.cells[row][0].blockNum === this.fallingBlockNum) { // ブロックが左端に来ている
-          return;
-        }
-      }
-      for (var row = 0; row < 20; row++) {
-        for (var col = 1; col < 10; col++) {
-          if (this.cells[row][col].blockNum === this.fallingBlockNum && this.cells[row][col-1].className !== "" && this.cells[row][col-1].blockNum !== this.fallingBlockNum) { // 左に別のブロックが存在する
+      if(this.ready){
+        for (var row = 0; row < 20; row++) {
+          if (this.cells[row][0].blockNum === this.fallingBlockNum) { // ブロックが左端に来ている
             return;
           }
         }
-      }
-      for (var row = 0; row < 20; row++) {
-        for (var col = 1; col < 10; col++) {
-          if (this.cells[row][col].base) {
-            this.cells[row][col-1].base = true;
-            this.cells[row][col].base = null;
-
+        for (var row = 0; row < 20; row++) {
+          for (var col = 1; col < 10; col++) {
+            if (this.cells[row][col].blockNum === this.fallingBlockNum && this.cells[row][col-1].className !== "" && this.cells[row][col-1].blockNum !== this.fallingBlockNum) { // 左に別のブロックが存在する
+              return;
+            }
           }
-          if (this.cells[row][col].blockNum === this.fallingBlockNum) {
-            this.cells[row][col-1].className = this.cells[row][col].className;
-            this.cells[row][col-1].blockNum = this.cells[row][col].blockNum;
-            this.cells[row][col].className = "";
-            this.cells[row][col].blockNum = null;
+        }
+        for (var row = 0; row < 20; row++) {
+          for (var col = 1; col < 10; col++) {
+            if (this.cells[row][col].base) {
+              this.cells[row][col-1].base = true;
+              this.cells[row][col].base = null;
+
+            }
+            if (this.cells[row][col].blockNum === this.fallingBlockNum) {
+              this.cells[row][col-1].className = this.cells[row][col].className;
+              this.cells[row][col-1].blockNum = this.cells[row][col].blockNum;
+              this.cells[row][col].className = "";
+              this.cells[row][col].blockNum = null;
+            }
           }
         }
       }
     },
     moveRight(){
-      for (var row = 0; row < 20; row++) {
-        if (this.cells[row][9].blockNum === this.fallingBlockNum) { // ブロックが左端に来ている
-          return;
-        }
-      }
-      for (var row = 0; row < 20; row++) {
-        for (var col = 8; col >= 0; col--) {
-          if (this.cells[row][col].blockNum === this.fallingBlockNum && this.cells[row][col+1].className !== "" && this.cells[row][col+1].blockNum !== this.fallingBlockNum) { // 左に別のブロックが存在する
+      if(this.ready){
+        for (var row = 0; row < 20; row++) {
+          if (this.cells[row][9].blockNum === this.fallingBlockNum) { // ブロックが左端に来ている
             return;
           }
         }
-      }
-      for (var row = 0; row < 20; row++) {
-        for (var col = 8; col >= 0; col--) {
-          if (this.cells[row][col].base) {
-            this.cells[row][col+1].base = true;
-            this.cells[row][col].base = null;
-
+        for (var row = 0; row < 20; row++) {
+          for (var col = 8; col >= 0; col--) {
+            if (this.cells[row][col].blockNum === this.fallingBlockNum && this.cells[row][col+1].className !== "" && this.cells[row][col+1].blockNum !== this.fallingBlockNum) { // 左に別のブロックが存在する
+              return;
+            }
           }
-          if (this.cells[row][col].blockNum === this.fallingBlockNum) {
-            this.cells[row][col+1].className = this.cells[row][col].className;
-            this.cells[row][col+1].blockNum = this.cells[row][col].blockNum;
-            this.cells[row][col].className = "";
-            this.cells[row][col].blockNum = null;
+        }
+        for (var row = 0; row < 20; row++) {
+          for (var col = 8; col >= 0; col--) {
+            if (this.cells[row][col].base) {
+              this.cells[row][col+1].base = true;
+              this.cells[row][col].base = null;
+
+            }
+            if (this.cells[row][col].blockNum === this.fallingBlockNum) {
+              this.cells[row][col+1].className = this.cells[row][col].className;
+              this.cells[row][col+1].blockNum = this.cells[row][col].blockNum;
+              this.cells[row][col].className = "";
+              this.cells[row][col].blockNum = null;
+            }
           }
         }
       }
     },
     moveDown(){
-      if(this.hasFallingBlock()){
-            this.fallBlocks()
-          }
+      if(this.ready){
+        if(this.hasFallingBlock()){
+              this.fallBlocks()
+            }
+      }
     },
     fallTrough(){
-      while(this.isFalling){
-        this.fallBlocks()
+      if(this.ready){
+        while(this.isFalling){
+          this.fallBlocks()
+        }
       }
     },
     rotate(){
-      console.log("まだだよ")
+      if(this.ready){
+        for(var row = 0; row < 20; row++){
+          for(var col = 0; col < 10; col++){
+            if(this.cells[row][col].blockNum === this.fallingBlockNum){
+              if(this.cells[row][col].className === "o"){
+                return
+              } else if(this.cells[row][col].className === "i"){
+                this.blockRange = 4
+              } else{
+                this.blockRange = 3
+              }
+              this.blockClass = this.cells[row][col].className
+              break
+            }
+          }
+        }
+        for(var row = 0; row < 20; row++){
+          for(var col = 0; col < 10; col++){
+            if(this.cells[row][col].base){
+              this.initRow = row
+              this.initCol = col
+              break
+            }
+          }
+        }
+        for(var i = 0; i < this.blockRange; i++){
+          for(var j = 0; j < this.blockRange; j++){
+            if(this.cells[this.initRow+i][this.initCol+j].className !== "" && this.cells[this.initRow+i][this.initCol+j].blockNum !== this.fallingBlockNum){
+              return
+            }
+          }
+        }
+        if(this.blockRange === 3){
+          this.rotatedBlockClass = [["","",""],["","",""],["","",""]]
+        }else if(this.blockRange === 4){
+          this.rotatedBlockClass = [["","","",""],["","","",""],["","","",""],["","","",""]]
+        }
+        for(var i = 0; i < this.blockRange; i++){
+          for(var j = 0; j < this.blockRange; j++){
+            this.rotatedBlockClass[j][this.blockRange-1-i] = this.cells[this.initRow+i][this.initCol+j].className
+          }
+        }
+        for(var i = 0; i < this.blockRange; i++){
+          for(var j = 0; j < this.blockRange; j++){
+            this.cells[this.initRow+i][this.initCol+j].blockNum = null
+            this.cells[this.initRow+i][this.initCol+j].className = this.rotatedBlockClass[i][j]
+            if(this.rotatedBlockClass[i][j] !== ""){
+              this.cells[this.initRow+i][this.initCol+j].blockNum = this.fallingBlockNum
+            }
+          }
+        }
+      }
     },
-    test(event){
-      if (event.keyCode === 37) {
-        this.moveLeft();
-      } else if (event.keyCode === 39) {
-        this.moveRight();
-      } else if (event.keyCode === 38) {
-        this.fallTrough();
-      } else if (event.keyCode === 40) {
-        this.moveDown();
+    keyactive(event){
+      if (event.keyCode === 37 || event.keyCode === 65 ) {
+        this.moveLeft()
+      } else if (event.keyCode === 39 || event.keyCode === 68 ) {
+        this.moveRight()
+      } else if (event.keyCode === 38 || event.keyCode === 87 ) {
+        this.fallTrough()
+      } else if (event.keyCode === 40 || event.keyCode === 83 ) {
+        this.moveDown()
       } else if (event.keyCode === 32) {
-        this.rotate();
+        this.rotate()
+      } else if(event.keyCode === 13 || event.keyCode === 80 ){
+        this.start()
       }
     },
     checkGameOver(){
@@ -315,7 +400,7 @@ export default {
   },
   mounted(){
     this.loadTable()
-    window.addEventListener('keydown',this.test)
+    window.addEventListener('keydown',this.keyactive)
   },
   beforeDestroy () {
     clearInterval(this.intervalId)
@@ -324,10 +409,60 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@mixin sp {
+  @media (max-width: 400px) {
+    @content;
+  }
+}
+@mixin tab {
+  @media (max-width: 800px) {
+    @content;
+  }
+}
+.ttrs{
+  p{
+    margin: 0;
+    font-size: 1.8rem;
+    &:nth-child(1){
+      margin-bottom: 10px;
+      font-size: 2.4rem;
+    }
+    &:nth-child(3){
+      margin-bottom: 10px;
+    }
+    @include tab{
+      font-size: 2.7rem;
+      &:nth-child(1){
+        margin-bottom: 10px;
+        font-size: 3.6rem;
+      }
+      &:nth-child(3){
+        margin-bottom: 10px;
+      }
+    }
+    @include sp{
+      font-size: 1.4rem;
+      &:nth-child(1){
+        margin-bottom: 10px;
+        font-size: 1.9rem;
+      }
+      &:nth-child(3){
+        margin-bottom: 10px;
+      }
+    }
+  }
 table {
-    margin: 0 auto; /* 中央寄せ */
+    margin: 0 auto;
     width: 200px;
     height: 400px;
+    @include tab{
+      width: 300px;
+      height: 600px;
+    }
+    @include sp{
+      width: 50vw;
+      height: 100vw;
+    }
 }
 td {
     width: 10%; /* 横10マス */
@@ -361,4 +496,69 @@ td {
 .l {
   background-color: #FF9800; /* orange */
 }
+
+.btn{
+  position: relative;
+  max-width: 400px;
+  width: calc(100% - 20px);
+  margin: 0 auto;
+  &_bg{
+    position: absolute;
+    display: block;
+    width: 56px; height: 56px;
+    background: #455A64;
+    text-align: center;
+    border-radius: 50%;
+    transition: .3s;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.12), 0 2px 2px 0 rgba(0,0,0,.24);
+    i{
+      color: white;
+      line-height: 56px;
+      font-size: 2.7rem;
+    }
+    &:nth-child(1){
+      top: 60px;
+      left: 10px;
+    }
+    &:nth-child(2){
+      transform: rotate(-90deg);
+      top: 105px;
+      left: 55px;
+    }
+    &:nth-child(3){
+      transform: rotate(180deg);
+      top: 60px;
+      left: 100px;
+    }
+    &:nth-child(4){
+      top: 105px;
+      right: 140px;
+    }
+    &:nth-child(5){
+      transform: rotate(-90deg);
+      top: 10px;
+      left: 55px;
+    }
+  }
+  .text_bg{
+    position: absolute;
+    display: block;
+    width: 176px; height: 56px;
+    background: #455A64;
+    text-align: center;
+    border-radius: 28px;
+    transition: .3s;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.12), 0 2px 2px 0 rgba(0,0,0,.24);
+    top: 30px; right: 20px;
+    span{
+      color: white;
+      line-height: 56px;
+      font-size: 2.4rem;
+      
+    }
+  }
+}
+
+}
+
 </style>

@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <h1>TETRIS</h1>
     <ttrs />
     <img src="@/assets/logo.png" alt="てとりす" @click="reload" class="main_logo">
   </div>
 </template>
 
 <script>
+import '@/assets/style.scss'
 import ttrs from '@/components/ttrs.vue'
 
 export default {
@@ -29,12 +29,12 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 30px;
 }
 .main_logo{
   position: fixed;
-  bottom: 0; right: 0;
+  top: 0; left: 0;
   z-index: -1;
-  height: 100px;
+  height: 70px;
 }
 </style>
