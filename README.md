@@ -1,29 +1,6 @@
-# ttrs-vue
+## てとりす風
 
-## Project setup
-```
-npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+#reference link
+[素のHTML, CSS, JavaScriptで0から始めるWeb開発](https://tech.mti.co.jp/entry/2017/07/21/573/)
+[verdy89/tetris](https://github.com/verdy89/tetris)
