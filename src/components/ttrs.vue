@@ -1,6 +1,7 @@
 <template>
-  <div class="ttrs" @keydown.left="moveLeft" @keydown.right="moveRight" @keydown.down="fallTrough">
+  <div class="ttrs">
     <p>{{ state }}</p>
+    <p>現在のスコア:{{ score }}</p>
     <table>
       <tr v-for="hei in height" :key="hei.id">
         <td v-for="wid in width" :key="wid.id"></td>
@@ -8,9 +9,10 @@
     </table>
     <button @click="start">{{click}}</button>
     <button @click="moveLeft">左</button>
-    <button @click="fallTrough">下</button>
+    <button @click="moveDown">下</button>
     <button @click="moveRight">右</button>
-    <button>回転(未実装)</button>
+    <button @click="rotate">回転(未実装)</button>
+    <button @click="fallTrough">落とす</button>
   </div>
 </template>
 
@@ -89,7 +91,8 @@ export default {
       fallingBlockNum: 0,
       nextFallingBlockNum: "",
       canDelete: true,
-      moving: true,
+      score: 0,
+      speed: 950,
 
 
     }
@@ -100,23 +103,18 @@ export default {
       if(this.ready == false){
         this.ready = !this.ready
         this.click = "一時停止"
-        console.log(this.ready)
         this.intervalId = setInterval(() => {
           this.checkGameOver()
           if(this.hasFallingBlock()){
             this.fallBlocks()
-            console.log("otiru")
           }else{
             this.deleteRow()
             this.generateBlock()
-            console.log("tukuru")
-
           }
-      }, 1000)
+      }, this.speed)
       }else{
         this.ready = !this.ready
         this.click = "スタート"
-        console.log(this.ready)
         clearInterval(this.intervalId)
       }
     },
@@ -185,6 +183,7 @@ export default {
           if(this.pattern[row][col]){
             this.cells[row][col + 3].className = this.nextBlock.class
             this.cells[row][col + 3].blockNum = this.nextFallingBlockNum
+            this.score += 100
           }
         }
       }
@@ -210,6 +209,7 @@ export default {
               this.cells[downRow + 1][col].blockNum = this.cells[downRow][col].blockNum;
               this.cells[downRow][col].className = "";
               this.cells[downRow][col].blockNum = null;
+              this.score += 70
             }
           }
         }else{
@@ -275,9 +275,30 @@ export default {
         }
       }
     },
+    moveDown(){
+      if(this.hasFallingBlock()){
+            this.fallBlocks()
+          }
+    },
     fallTrough(){
       while(this.isFalling){
         this.fallBlocks()
+      }
+    },
+    rotate(){
+      console.log("まだだよ")
+    },
+    test(event){
+      if (event.keyCode === 37) {
+        this.moveLeft();
+      } else if (event.keyCode === 39) {
+        this.moveRight();
+      } else if (event.keyCode === 38) {
+        this.fallTrough();
+      } else if (event.keyCode === 40) {
+        this.moveDown();
+      } else if (event.keyCode === 32) {
+        this.rotate();
       }
     },
     checkGameOver(){
@@ -294,9 +315,9 @@ export default {
   },
   mounted(){
     this.loadTable()
+    window.addEventListener('keydown',this.test)
   },
   beforeDestroy () {
-    console.log('clearInterval')
     clearInterval(this.intervalId)
   }
 }
