@@ -110,7 +110,6 @@ export default {
       nextFallingBlockNum: "",
       canDelete: true,
       score: 0,
-      Highscore: "未実装",
       speed: 950,
       blockRange: 0,
       initRow: "",
@@ -128,6 +127,9 @@ export default {
         this.ready = !this.ready
         this.click = "Pause"
         this.intervalId = setInterval(() => {
+          if(this.Highscore < this.score){
+            this.$store.commit('setScore', this.score)
+          }
           this.checkGameOver()
           if(this.hasFallingBlock()){
             this.fallBlocks()
@@ -393,7 +395,6 @@ export default {
         for (var col = 0; col < 10; col++){
           if (this.cells[row][col].className !== "" && this.cells[row][col].blockNum !== this.fallingBlockNum){
               clearInterval(this.intervalId)
-              console.log("Game Over!")
               this.state = "げーむおーばー！"
           }
         }
@@ -403,6 +404,11 @@ export default {
   mounted(){
     this.loadTable()
     window.addEventListener('keydown',this.keyactive)
+  },
+  computed:{
+    Highscore(){
+      return this.$store.getters.Highscore
+    }
   },
   beforeDestroy () {
     clearInterval(this.intervalId)

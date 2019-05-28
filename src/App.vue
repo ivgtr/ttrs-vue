@@ -42,7 +42,7 @@ export default {
 .main_logo{
   position: fixed;
   top: calc(50% - 70px); left: 0;
-  z-index: -1;
+  z-index: 1;
   height: 70px;
 }
 </style>
