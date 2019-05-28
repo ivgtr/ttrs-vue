@@ -23,6 +23,11 @@ export default {
 </script>
 
 <style lang="scss">
+@mixin sp {
+  @media (max-width: 400px) {
+    @content;
+  }
+}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -30,6 +35,9 @@ export default {
   text-align: center;
   color: #455A64;
   margin-top: 30px;
+  @include sp{
+    margin-top: 0;
+  }
 }
 .main_logo{
   position: fixed;

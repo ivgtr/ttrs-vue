@@ -411,11 +411,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@mixin smoll {
-  @media (max-width: 320px) {
-    @content;
-  }
-}
 @mixin sp {
   @media (max-width: 400px) {
     @content;
@@ -448,13 +443,14 @@ export default {
       }
     }
     @include sp{
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       &:nth-child(1){
-        margin-bottom: 10px;
-        font-size: 1.9rem;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        font-size: 1.4rem;
       }
       &:nth-child(3){
-        margin-bottom: 10px;
+        margin-bottom: 5px;
       }
     }
   }
@@ -467,12 +463,8 @@ export default {
       height: 600px;
     }
     @include sp{
-      width: 50vw;
-      height: 100vw;
-    }
-    @include smoll{
-      width: 50vw;
-      height: 100vw;
+      width: 44vw;
+      height: 88vw;
     }
   }
   td {
