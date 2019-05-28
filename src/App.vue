@@ -28,12 +28,12 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #455A64;
   margin-top: 30px;
 }
 .main_logo{
   position: fixed;
-  top: 0; left: 0;
+  top: calc(50% - 70px); left: 0;
   z-index: -1;
   height: 70px;
 }

@@ -8,25 +8,27 @@
         <td v-for="wid in width" :key="wid.id"></td>
       </tr>
     </table>
-    <div class="btn">
-      <span class="btn_bg" @click="moveLeft">
-        <i class="fas fa-angle-left"></i>
-      </span>
-      <span class="btn_bg" @click="moveDown">
-        <i class="fas fa-angle-left"></i>
-      </span>
-      <span class="btn_bg" @click="moveRight">
-        <i class="fas fa-angle-left"></i>
-      </span>
-      <span class="btn_bg" @click="rotate">
-        <i class="fas fa-undo"></i>
-      </span>
-      <span class="btn_bg" @click="fallTrough">
-        <i class="fas fa-angle-double-left"></i>
-      </span>
-      <span class="text_bg" @click="start">
-        <span>{{click}}</span>
-      </span>
+    <div class="btn_set">
+      <div class="btn">
+        <span class="btn_bg" @click="moveLeft">
+          <i class="fas fa-angle-left"></i>
+        </span>
+        <span class="btn_bg" @click="moveDown">
+          <i class="fas fa-angle-left"></i>
+        </span>
+        <span class="btn_bg" @click="moveRight">
+          <i class="fas fa-angle-left"></i>
+        </span>
+        <span class="btn_bg" @click="rotate">
+          <i class="fas fa-undo"></i>
+        </span>
+        <span class="btn_bg" @click="fallTrough">
+          <i class="fas fa-angle-double-left"></i>
+        </span>
+        <span class="text_bg" @click="start">
+          <span>{{click}}</span>
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -409,6 +411,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@mixin smoll {
+  @media (max-width: 320px) {
+    @content;
+  }
+}
 @mixin sp {
   @media (max-width: 400px) {
     @content;
@@ -451,7 +458,7 @@ export default {
       }
     }
   }
-table {
+  table {
     margin: 0 auto;
     width: 200px;
     height: 400px;
@@ -463,102 +470,146 @@ table {
       width: 50vw;
       height: 100vw;
     }
-}
-td {
+    @include smoll{
+      width: 50vw;
+      height: 100vw;
+    }
+  }
+  td {
     width: 10%; /* 横10マス */
     height: 5%; /* 縦20マス */
     background-color: #455A64;
-}
-.i {
-  background-color: #00BCD4; /* cyan */
-}
+  }
+  .i {
+    background-color: #00BCD4; /* cyan */
+  }
 
-.o {
-  background-color: #FFEB3B; /* yellow */
-}
+  .o {
+    background-color: #FFEB3B; /* yellow */
+  }
 
-.t {
-  background-color: #9C27B0; /* purple */
-}
+  .t {
+    background-color: #9C27B0; /* purple */
+  }
 
-.s {
-  background-color: #4CAF50; /* green */
-}
+  .s {
+    background-color: #4CAF50; /* green */
+  }
 
-.z {
-  background-color: #F44336; /* red */
-}
+  .z {
+    background-color: #F44336; /* red */
+  }
 
-.j {
-  background-color: #2196F3; /* blue */
-}
+  .j {
+    background-color: #2196F3; /* blue */
+  }
 
-.l {
-  background-color: #FF9800; /* orange */
-}
-
-.btn{
-  position: relative;
-  max-width: 400px;
-  width: calc(100% - 20px);
-  margin: 0 auto;
-  &_bg{
-    position: absolute;
-    display: block;
-    width: 56px; height: 56px;
-    background: #455A64;
-    text-align: center;
-    border-radius: 50%;
-    transition: .3s;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,.12), 0 2px 2px 0 rgba(0,0,0,.24);
-    i{
-      color: white;
-      line-height: 56px;
-      font-size: 2.7rem;
+  .l {
+    background-color: #FF9800; /* orange */
+  }
+  .btn_set{
+    .btn{
+      position: relative;
+      max-width: 400px;
+      width: calc(100% - 20px);
+      margin: 0 auto;
+      &_bg{
+        position: absolute;
+        display: block;
+        width: 56px; height: 56px;
+        background: #455A64;
+        text-align: center;
+        border-radius: 50%;
+        transition: .3s;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,.12), 0 2px 2px 0 rgba(0,0,0,.24);
+        i{
+          color: white;
+          line-height: 56px;
+          font-size: 2.7rem;
+        }
+        &:nth-child(1){
+          top: 60px;
+          left: 10px;
+        }
+        &:nth-child(2){
+          transform: rotate(-90deg);
+          top: 105px;
+          left: 55px;
+        }
+        &:nth-child(3){
+          transform: rotate(180deg);
+          top: 60px;
+          left: 100px;
+        }
+        &:nth-child(4){
+          top: 105px;
+          right: 140px;
+        }
+        &:nth-child(5){
+          transform: rotate(-90deg);
+          top: 10px;
+          left: 55px;
+        }
+        @include sp{
+          width: 44px; height: 44px;
+          i{
+            line-height: 44px;
+            font-size: 2.1rem;
+          }
+          &:nth-child(1){
+            top: 49px;
+            left: 0;
+          }
+          &:nth-child(2){
+            top: 88px;
+            left: 38px;
+          }
+          &:nth-child(3){
+            top: 49px;
+            left: 78px;
+          }
+          &:nth-child(4){
+            top: 88px;
+            right: 100px;
+          }
+          &:nth-child(5){
+            top: 10px;
+            left: 38px;
+          }
+        }
+      }
+      .text_bg{
+        position: absolute;
+        display: block;
+        width: 176px; height: 56px;
+        background: #455A64;
+        text-align: center;
+        border-radius: 28px;
+        transition: .3s;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,.12), 0 2px 2px 0 rgba(0,0,0,.24);
+        top: 30px; right: 20px;
+        span{
+          color: white;
+          line-height: 56px;
+          font-size: 2.4rem;
+        }
+        @include sp{
+          width: 146px; height: 44px;
+          border-radius: 22px;
+          right: 0;
+          span{
+            line-height: 44px;
+            font-size: 2.1rem;
+          }
+        }
+      }
     }
-    &:nth-child(1){
-      top: 60px;
-      left: 10px;
-    }
-    &:nth-child(2){
-      transform: rotate(-90deg);
-      top: 105px;
-      left: 55px;
-    }
-    &:nth-child(3){
-      transform: rotate(180deg);
-      top: 60px;
-      left: 100px;
-    }
-    &:nth-child(4){
-      top: 105px;
-      right: 140px;
-    }
-    &:nth-child(5){
-      transform: rotate(-90deg);
-      top: 10px;
-      left: 55px;
+    @include sp{
+      position: fixed;
+      height: 142px; width: 100%;
+      bottom: 0;
     }
   }
-  .text_bg{
-    position: absolute;
-    display: block;
-    width: 176px; height: 56px;
-    background: #455A64;
-    text-align: center;
-    border-radius: 28px;
-    transition: .3s;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,.12), 0 2px 2px 0 rgba(0,0,0,.24);
-    top: 30px; right: 20px;
-    span{
-      color: white;
-      line-height: 56px;
-      font-size: 2.4rem;
-      
-    }
-  }
-}
-
 }
 
 </style>
